@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content">
+    <h1 class="title">
+        ¡Hola!, {{ nombre }}
+    </h1>
+    <div class="box">
+        Bienvenido a nuestra aplicación BehaviorRat-KL. Esta aplicación hace parte del pre-entrenamiento en habilidades de observación y registro y fue diseñada para ti, podrás realizarla en computador o desde tu móvil. Sólo debes observar el video de la fase de investigación en la que se encuentra tu sujeto experimental. Mientras lo observas, vas a registrar las conductas que se presentan en él oprimiendo los botones que se encuentran en la parte inferior. Al final, tendrás el porcentaje de aciertos en cada conducta y si ganaste tu Konrad Medalla. Con tu Konrad Medalla de oro podrás tener la experiencia de ingresar a nuestro laboratorio de conducta animal. ¡Te esperamos!
+    </div>
+
+    <form action="{{ url_for('main.ejemplo') }}" method="GET">
+        
+        <div class="field">
+            <label class="label">Selecciona la fase de investigación:</label>
+            <div class="control">
+                <div class="select is-fullwidth">
+                    <select name="fase_investigacion" required>
+                        <option value="" selected disabled>-- Elige una opción --</option>
+                        <!-- {% for fase in fases %}
+                        <option value="{{ fase.id }}">{{ fase.nombre }}</option>
+                        {% endfor %}
+                    -->
+                        {% for fase in fases %}
+                            {% if fase.nombre == 'Extinción'%}
+                                <option value="{{ fase.id }}">{{ fase.nombre }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="button is-link mt-4">
+            Siguiente
+        </button>
+
+    </form>
+    
+</div>
+{% endblock %}

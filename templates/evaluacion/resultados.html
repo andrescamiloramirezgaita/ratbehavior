@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<div class="container">
+    
+    
+    <h1 class="title">
+        Resultados
+    </h1>
+    <h2 class="subtitle">
+        {{usuario.nombres}} este es tu puntaje: {{ '%.2f'|format(score) }}%. En la siguiente tabla puedes ver el detalle.
+    <table class="table">
+        <thead>
+            <tr>
+                <th>inicio</th>
+                <th>fin</th>
+                <th>Palanqueo</th>
+                <th>Levantamiento</th>
+                <th>Acercamiento</th>
+                <th>Entrega Pellet</th>
+                <th>Consumo Pellet</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for fila in matriz_lista[:15] %}
+                <tr>
+                    {% for i, celda in enumerate(fila[:7]) %}
+                        {% if i == 2 and fila[2] == fila[8] %}
+                            <td class="is-success">{{ celda }}</td>
+                        {% elif i == 2 %}
+                            <td class="is-danger">{{ celda }}</td>
+                        {% elif i == 4 and fila[4] == fila[9] %}
+                            <td class="is-success">{{ celda }}</td>
+                        {% elif i == 4 %}
+                            <td class="is-danger">{{ celda }}</td>
+                        {% elif i == 5 and fila[5] == fila[10] %}
+                            <td class="is-success">{{ celda }}</td>
+                        {% elif i == 5 %}
+                            <td class="is-danger">{{ celda }}</td>
+                        {% elif i == 6 and fila[6] == fila[11] %}
+                            <td class="is-success">{{ celda }}</td>
+                        {% elif i == 6 %}
+                            <td class="is-danger">{{ celda }}</td>
+                        {% else %}
+                            <td>{{ celda }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- 
+<p><strong>idevaluacion:</strong> {{ idevaluacion }}</p>
+<p><strong>list_url_videos:</strong> {{ list_url_videos }}</p>
+<p><strong>list_id_videos:</strong> {{ list_id_videos }}</p>
+<p><strong>nombre_fase:</strong> {{ nombre_fase }}</p>
+<p><strong>usuario:</strong> {{ usuario }}</p>
+<p><strong>fases_conductas:</strong> {{ fases_conductas }}</p>
+<p><strong>list_seccion_videos:</strong> {{ list_seccion_videos }}</p>
+<p><strong>list_video:</strong> {{ list_video }}</p>
+<p><strong>usuario:</strong> {{ usuario.codigo }}</p>
+<p><strong>ultimo_video_id:</strong> {{ ultimo_video_id }}</p>
+<p><strong>ultimo_video_codigo:</strong> {{ ultimo_video_codigo }}</p>
+<p><strong>ultimo_video_seccion:</strong> {{ ultimo_video_seccion }}</p>
+-->
+<div id="app_evaluacion" data-idevaluacion="{{ idevaluacion }}" data-video-ids="{{ list_url_videos }}" data-video-ids-lista="{{ list_id_videos }}" data-nombrefase="{{ nombre_fase }}" seccion-video="{{ list_seccion_videos }}" list-video="{{ list_video }}" ultimo-video-id="{{ultimo_video_id}}" ultimo-video-codigo="{{ultimo_video_codigo}}" ultimo-video-seccion="{{ultimo_video_seccion}}">  
+  <div style="text-align: center;">
+    <h3 class="subtitle">
+      ¡Hola!, {{usuario.nombres}} Estás en la fase {{nombre_fase}}
+    </h3> 
+<div id="mensaje" style="font-weight: bold; color: green;"></div>
+  </div>
+  <div class="fixed-grid has-2-cols">
+    <div class="grid">      
+      <div class="cell">
+        <div class="video-container">
+          <div id="video-player" @timeupdate="checkVideoTime"></div>
+        </div>
+      </div>
+      <div class="cell is-row-start-2">
+        <span> 
+          <p class="mensaje-pequeno">
+            <br><strong>Mensaje:</strong> En la siguiente barra aparecerá qué tan preciso estás siendo con la observación y registro de conductas por minuto. Si en el primer minuto tu registro no es preciso saldrá un color rojo, y si es preciso y atiendes el criterio saldrá un color verde. Recuerda que puedes hacer varios videos hasta lograr la meta. ¡Éxitos!
+          </p>        
+          <br>Tiempo restante de video: [[ formattedTime  ]]</br>
+        </span>
+        <div class="progress-bar-container">
+          <div v-for="(segment, index) in progressBarSegments" :key="index" :style="{ backgroundColor: segment.color }" class="progress-bar-segment"></div>
+        </div>
+        <div class="buttons">          
+          <!-- <button class="button is-small is-primary is-responsive" @click="iniciar()">Inicio</button> -->
+          {% for fc in fases_conductas %}
+              <button class="button is-small is-responsive" :class="getButtonClass('{{ fc.conducta }}')" @click="accion('{{fc.conducta}}')" :disabled="isButtonEnabled">
+                  {{ fc.conducta }} ([[ contadores['{{ fc.conducta }}'] ]])
+              </button>
+          {% endfor %}
+          <button class="button is-small is-responsive btn-finalizar" v-show="isButtonEnabled"  @click="finalizar()">Terminar</button>
+        </div>
+      </div>
+      <div class="cell">
+        <article class="message is-link">
+          <div class="message-header">
+            <p> Recuerda las definiciones operacionales de las conductas a observar:</p>      
+          </div>
+          <div class="message-body">
+            <strong>Pararse en dos patas:</strong> El sujeto levanta sus patas delanteras, se apoya en las traseras y asume una posición mayor o igual a 45 grados, con o sin apoyo de una superficie vertical. La conducta inicia una vez el animal levanta sus patas delanteras, ergue su tronco y finaliza al tocar la rejilla con las patas delanteras.
+            <br><strong>Acercase a la palanca:</strong> El sujeto se aproxima a la palanca activa (olfatea la palanca o sus alrededores, se levanta en dos patas sobre la palanca, o se apoya en ella para olfatar otras partes de la caja). Si el animal se acerca a la palanca y la oprime, no se cuenta como acercamiento a la palanca sino como palanqueo. 
+            <br><strong>Palanquear:</strong> El animal con cualquier parte del cuerpo oprime la palanca haciendo clic sobre ella. El animal debe presionar la palanca y esta debe descender. Revise que otros sonidos del video no se confundan con el clic emitido por la palanca (el sonido original es semejante a un clic de mouse).
+          </div>
+        </article>
+      </div>
+      
+    </div>
+</div>  
+</div>
+<script type="text/javascript" src="{{ url_for('static', filename='js/evaluacion.js') }}"></script>
+<style>
+  #video-player {
+    /* Estilos básicos del reproductor de video */
+    border: 2px solid;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* .fixed-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  } */
+
+  .cell {
+    flex: 1 1 100%;
+    max-width: 600px;
+    margin: 10px;
+  }
+
+  .buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .button {
+    margin: 5px;
+  }
+
+  @media (min-width: 600px) {
+    .cell {
+      flex: 1 1 45%;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .cell {
+      flex: 1 1 30%;
+    }
+  }
+
+  /* Añadir contenedor para centrar el video */
+  .video-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .progress-bar-container {
+    display: flex;
+    width: 100%;
+    height: 20px; /* Altura de la barra de progreso */
+    background-color: #e0e0e0; /* Color de fondo de la barra de progreso */
+    border-radius: 5px; /* Bordes redondeados */
+    overflow: hidden; /* Ocultar desbordamiento */
+    margin-top: 10px; /* Espacio superior */
+  }
+
+  .progress-bar-segment {
+    flex: 1; /* Cada segmento ocupa el mismo espacio */
+    height: 100%; /* Altura completa de la barra de progreso */
+    transition: background-color 0.3s; /* Transición suave para el cambio de color */
+  }
+
+  .btn-palanqueo {
+    background-color: #ff8c42; /* Naranja más claro */
+    color: white;
+    border: 1px solid #e66a23; /* Borde un poco más oscuro */
+  }
+
+  .btn-levantamiento {
+    background-color: #3498db; /* Azul */
+    color: white;
+    border: 1px solid #217dbb;
+  }
+
+  .btn-acercamiento {
+    background-color: #2ecc71; /* Verde */
+    color: white;
+    border: 1px solid #27ae60;
+  }
+
+  .btn-comedero {
+      background-color: #f1c40f; /* Amarillo */
+      color: black;
+      border: 1px solid #d4ac0d;
+  }
+
+  .btn-aproximacion {
+    background-color: #9b59b6; /* Morado */
+    color: white;
+    border: 1px solid #8e44ad;
+  }
+
+  .btn-tocar-palanca {
+    background-color: #e74c3c; /* Rojo */
+    color: white;
+    border: 1px solid #c0392b;
+  }
+
+  .btn-palanqueo-reforzado {
+    background-color: #27ae60; /* Un verde vibrante */
+    color: white;
+    border: 1px solid #1e8449;
+  }
+
+  .btn-palanqueo-no-reforzado {
+    background-color: #c0392b; /* Un rojo oscuro */
+    color: white;
+    border: 1px solid #a93226;
+  }
+
+  .btn-finalizar {
+  background-color: #ff6b6b; /* Rojo más claro */
+    color: white;
+    border: 1px solid #ff4d4d; /* Borde un poco más oscuro */
+  }
+
+  .btn-palanqueo:hover {
+    background-color: #e67e30;
+  }
+
+  .btn-levantamiento:hover {
+    background-color: #2980b9;
+  }
+
+  .btn-acercamiento:hover {
+    background-color: #1e8449;
+  }
+
+  .btn-comedero:hover {
+    background-color: #f39c12;
+  }
+
+  .btn-aproximacion:hover {
+    background-color: #8e44ad;
+  }
+
+  .btn-tocar-palanca:hover {
+    background-color: #c0392b;
+  }
+
+  .btn-palanqueo-reforzado:hover {
+    background-color: #2ecc71;
+  }
+
+  .btn-palanqueo-no-reforzado:hover {
+    background-color: #e74c3c;
+  }
+
+  .btn-default {
+    background-color: #b0b0b0; /* Gris por defecto */
+    color: white;
+  }
+
+  .btn-finalizar:hover {
+    background-color: #c82333;
+  }
+  .mensaje-pequeno {
+    font-size: 10px; /* Puedes ajustar el tamaño según necesites */
+    color: #555; /* Color más tenue opcional */
+  }
+
+</style>
+{% endblock %}

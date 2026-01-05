@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href="{{ url_for('static', filename='css/bulma.min.css') }}">    
+
+    <!-- Vue Scripts -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <section class="hero is-link" style="padding: 20;">
+    <div class="hero-body is-flex is-justify-content-space-between is-align-items-center">
+        <div>
+            <p class="title">BehaviorRat-KL</p>
+            <p class="subtitle">Aplicativo para evaluar competencias de observación en laboratorio</p>
+        </div>
+        <div>
+            <a href="{{ url_for('auth.logout') }}" class="button is-link">Salir</a>
+        </div>
+    </div>
+</section>
+    <section class="inner-page" style="padding: 0%;">
+        <div class="container">
+          <div class="col-12 mx-auto mt-3">
+            {% block content %}
+              
+            {% endblock %}
+        </div>
+        </div>
+      </section>
+</body>
+</html>

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+    <a href="{{ url_for('auth.signup') }}" class="button is-link">Registrar</a>
+    <a href="{{ url_for('auth.list') }}" class="button is-link">Listado</a>    
+</div>
+    <div class="container mt-5">
+        <h1>Usuarios y Resultados de Evaluaciones</h1>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Resultado Más Alto</th>
+                    <th>Fecha de Evaluación</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in usuarios_evaluaciones %}
+                <tr>
+                    <td>{{ usuario.nombres }}</td>
+                    <td>{{ usuario.apellidos }}</td>
+                    <td>{{ usuario.resultado }}%</td>
+                    <td>{{ usuario.fecha.strftime('%Y-%m-%d') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endblock %}

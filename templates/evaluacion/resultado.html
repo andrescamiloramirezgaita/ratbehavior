@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block content %}    
+<article class="message is-link">
+    <div class="message-header">
+      <p> {{usuario.nombres}}, este es el resultado de tu evaluación</p>      
+    </div>
+    <div class="message-body">
+        <div class="fixed-grid">
+            <div class="grid">
+              <div class="cell"><table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Conducta</th>
+                        <th>Porcentaje de Acierto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for conducta, porcentaje in porcentaje_por_conducta.items() %}
+                    <tr>
+                        <td>{{ conducta }}</td> <!-- Mostramos el nombre de la conducta -->
+                        <td>{{ porcentaje }}%</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table></div>
+              <div class="cell">
+                <div style="text-align: left;">
+                    {% if porcentaje_total >= 80 %}
+                        <img src="{{ url_for('static', filename='images/oro.png') }}" alt="Konrad Medalla" width="300" height="100">
+                        <p style="color: rgb(233, 148, 13);">Medalla de Oro</p>                        
+                    {% else %}
+                        {% if porcentaje_total > 70 %}
+                            <img src="{{ url_for('static', filename='images/plata.png') }}" alt="Konrad Medalla" width="300" height="100">
+                            <p style="color: rgb(143, 139, 134); ">Medalla de Plata</p>
+                        {% else %}                                                                                       
+                                <img src="{{ url_for('static', filename='images/bronce.png') }}" alt="Konrad Medalla" width="300" height="100">
+                                <p style="color: burlywood;">Medalla de Bronce</p>
+                        {% endif %}
+                    {% endif %}                    
+                </div>
+              </div>
+        </div>        
+        <div class="content">
+            <h4>Puntaje global: <span class="tag is-link is-normal">{{ porcentaje_total | round(2) }}%</span></h4>                                    
+        </div>
+    </div>
+  </article>
+    {% if porcentaje_total >= 80 %}
+        <div class="notification is-primary" >
+            Felicitaciones, has logrado observar y registrar con mayor precisión, ganaste tu Konrad Medalla de Oro y podrás ingresar a nuestro laboratorio, ¡te esperamos!
+        </div>        
+    {% else %}
+        {% if porcentaje_total > 70 %}
+            <div class="notification is-info" >
+                Ya casi logras observar y registrar con mayor precisión, has obtenido tu Konrad Medalla de plata, evalúa con detalle tus aspectos a mejorar. 
+            </div>   
+        {% else %}        
+            {% if porcentaje_total > 60 %}
+                <div class="notification is-warning is-light" >
+                    Vas por buen camino, has obtenido tu Konrad Medalla de bronce, estás muy cerca
+                </div>   
+            {% else %}
+                <div class="notification is-danger is-light" >
+                    Sigue intentándolo, cada vez estarás más cerca de ganar tu Konrad Medalla de oro e ingresar a nuestro laboratorio.
+                </div>   
+            {% endif %}
+        <div class="content notification is-danger is-light">
+            Revisa las siguientes conductas en las que tuviste fallas:
+            <ul>
+                {% for conducta in conductas_fallidas %}
+                    <li>{{ conducta }}</li> <!-- Muestra el nombre de la conducta con fallas -->
+                {% endfor %}
+            </ul>           
+        </div>
+        {% endif %}   
+        <a href="{{ url_for('evaluacion.index') }}" class="button is-link">Volver a intentar</a>     
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content">
+    <h1>Ejemplo</h1>
+    
+    <div class="container">
+        <!-- Contenedor del video (Izquierda) -->
+        <div class="video-container">
+            <iframe width="560" height="315" 
+                src="https://www.youtube.com/embed/qdaBhxvylas" 
+                title="YouTube video player" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+        </div>
+
+        <!-- Contenedor del texto (Derecha) -->
+        <div class="text-container">
+            <div class="box">
+                Ahora revisa el siguiente ejemplo de cómo se presenta cada conducta en el animal. 
+                Cuando sientas que estás preparado para realizarla, haz clic en el botón **"Realizar evaluación"**..
+            </div>
+            <a href="{{ url_for('evaluacion.index',fase_investigacion=fase_id) }}" class="button is-link">Realizar evaluación</a>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/ejemplo.js') }}"></script>
+</div>
+
+<style>
+/* Contenedor principal en fila */
+.container {
+    display: flex;
+    align-items: center; /* Centrar verticalmente */
+    justify-content: center; /* Centrar en el espacio */
+    gap: 40px; /* Espaciado entre el video y el texto */
+    padding: 20px;
+    flex-wrap: wrap; /* Permitir ajuste en pantallas pequeñas */
+}
+
+/* Estilos del video */
+.video-container {
+    flex: 1.5; /* Ocupar más espacio que el texto */
+    max-width: 55%;
+}
+
+.video-container iframe {
+    width: 100%;
+    height: 315px; /* Altura fija para evitar distorsión */
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos del texto */
+.text-container {
+    flex: 1; /* Ocupar menos espacio */
+    max-width: 40%;
+    background: #eef2ff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Ajuste para pantallas pequeñas */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .video-container, .text-container {
+        max-width: 100%;
+    }
+}
+</style>
+{% endblock %}

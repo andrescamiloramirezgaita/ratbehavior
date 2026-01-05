@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+<div>    
+    <a href="{{ url_for('auth.usuarios_evaluaciones') }}" class="button is-link">Resultados</a>     
+    <a href="{{ url_for('auth.list') }}" class="button is-link">Listado</a>    
+</div>
+<div class="columns is-justify-content-center">
+    <div class="column is-6-tablet is-5-desktop is-4-widescreen is-3-fullh">
+        <h1 class="title">
+            Registrar
+        </h1>
+        <form method="POST" action="{{ url_for('auth.register')}}" class="box p-5">
+            <label class="is-block mb-4">
+                <span class="is-block mb-2">Código</span>
+                <input id="codigo" name="codigo" required type="text" class="input" placeholder="616202531" />
+            </label>
+            <label class="is-block mb-4">
+                <span class="is-block mb-2">Nombres</span>
+                <input id="nombres" name="nombres" required type="text" class="input" placeholder="Nombres" />
+            </label>
+            <label class="is-block mb-4">
+                <span class="is-block mb-2">Apellidos</span>
+                <input id="apellidos" name="apellidos" required type="text" class="input" placeholder="Apellidos" />
+            </label>
+            <label class="is-block mb-4">
+                <span class="is-block mb-2">correo</span>
+                <input id="email" name="email" required type="email" class="input"
+                    placeholder="jhon.doe@konradlorenz.edu.co" />
+            </label>
+
+            <label class="is-block mb-4">
+                <span class="is-block mb-2">Password</span>
+                <input id="password" name="password" type="password" class="input" minlength="6"
+                    placeholder="numero de identificacion" required />
+            </label>
+            {% if error %}
+            <span class="help is-danger">{{ error }}</span>
+            {% endif %}
+            <div class="mb-4">
+                <button type="submit" class="button is-link px-4">Registrar</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+</div>
+{% endblock %}
